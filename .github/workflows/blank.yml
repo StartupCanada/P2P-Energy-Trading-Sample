@@ -1,0 +1,32 @@
+class User:
+    def __init__(self, name, balance):
+        self.name = name
+        self.balance = balance
+        self.energy = 0
+        
+    def buy_energy(self, seller, amount, price):
+        cost = amount * price
+        if self.balance >= cost:
+            self.balance -= cost
+            self.energy += amount
+            seller.sell_energy(self, amount, price)
+        else:
+            raise ValueError("Insufficient funds")
+        
+    def sell_energy(self, buyer, amount, price):
+        if self.energy >= amount:
+            self.energy -= amount
+            self.balance += amount * price
+            buyer.buy_energy(self, amount, price)
+        else:
+            raise ValueError("Insufficient energy")
+        
+class Market:
+    def __init__(self):
+        self.users = {}
+        
+    def add_user(self, user):
+        self.users[user.name] = user
+        
+    def get_user(self, name):
+        return self.users.get(name)
